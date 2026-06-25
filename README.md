@@ -1,11 +1,16 @@
-# Blue Waters Cancun Parking
+# Blue Waters Cancun Premium Commercial Website
 
-Pricing is set exactly as:
-- 1 Hour: $3 USD
-- 3 Hours: $7 USD
-- 24 Hours: $20 USD
+Upload all files to GitHub and deploy latest commit on Render.
+
+Pricing:
+- 1 Hour: $3
+- 3 Hours: $7
+- 24 Hours: $20
+
+Dashboard protection:
+- ADMIN_USERNAME
+- ADMIN_PASSWORD
 
 Render:
-Build Command: npm install
-Start Command: npm start
-Root Directory: blank
+- Build Command: npm install
+- Start Command: npm start

@@ -1,83 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Blue Waters Cancun Parking</title>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Blue Waters Cancun Premium Parking</title>
+<meta name="description" content="Premium 24-hour Cancun parking with secure online booking and payments.">
 <script src="https://js.stripe.com/v3/"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="top-alert"><span class="new-pill">NEW</span><span>NEW AND RENOVATED PARKING SYSTEM OF CANCUN</span><b>|</b><span>NUEVO Y RENOVADO SISTEMA DE PAGO DE TODOS LOS PARQUEOS PUBLICO DE CANCUN 🎉</span></div>
+<div class="top-alert">Premium 24-Hour Parking • Secure Online Payments • Nuevo sistema de pago de parqueos públicos de Cancún</div>
 
 <header class="main-header">
-  <div class="brand"><div class="brand-icon">≋</div><div><strong>BLUE WATERS</strong><span>CANCUN PARKING</span></div></div>
-  <nav><a href="#home">HOME</a><a href="#rates">PRICING</a><a href="#book">BOOK</a><a href="dashboard.html">DASHBOARD</a><a class="book-now" href="#book">BOOK NOW</a></nav>
+  <a class="brand" href="#home"><div class="brand-icon">≋</div><div><strong>BLUE WATERS</strong><span>CANCUN PARKING</span></div></a>
+  <nav><a href="#rates">Pricing</a><a href="#book">Reserve</a><a href="#trust">Security</a><a href="/dashboard.html">Admin</a><a class="nav-cta" href="#book">Book Now</a></nav>
 </header>
 
 <section id="home" class="hero">
-  <div class="hero-copy">
-    <h1>SAFE. SECURE.<br>CLOSE TO PARADISE.</h1>
-    <p>Convenient parking for your Cancun adventure.</p>
-    <div class="features"><span>🛡️ 24/7 Security</span><span>🚗 Covered Parking</span><span>📷 CCTV Monitoring</span></div>
-    <a href="#book" class="reserve-btn">RESERVE YOUR SPOT</a>
-  </div>
-  <div class="announcement-card">
-    <div class="ribbon">¡NUEVO!</div><div class="megaphone">📣</div>
-    <h2>NEW AND RENOVATED<br>PARKING SYSTEM OF CANCUN</h2>
-    <div class="gold-line">★</div>
-    <h3>NUEVO Y RENOVADO<br>SISTEMA DE PAGO DE TODOS LOS<br>PARQUEOS PUBLICO DE CANCUN</h3>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="luxury-tag">CANCUN PREMIUM PARKING</div>
+    <h1>Park with confidence.<br>Arrive in paradise.</h1>
+    <p>Secure, convenient, and professionally managed parking for visitors and locals in Cancun.</p>
+    <div class="hero-actions"><a class="primary-btn" href="#book">Reserve Your Spot</a><a class="secondary-btn" href="tel:7865883514">Call 786-588-3514</a></div>
+    <div class="hero-stats"><div><strong>24/7</strong><span>Access</span></div><div><strong>Secure</strong><span>Payments</span></div><div><strong>USD/MXN</strong><span>Live Rates</span></div></div>
   </div>
 </section>
 
+<section class="announcement-premium">
+  <div><span class="small-label">New System</span><h2>New and Renovated Parking System of Cancun</h2><p>Nuevo y renovado sistema de pago de todos los parqueos públicos de Cancún.</p></div>
+  <a href="#book">Book Parking</a>
+</section>
+
 <main class="content">
-  <section id="rates" class="rates">
-    <h2>🚘 PARKING RATES</h2>
-    <div class="exchange"><span class="dot"></span><span>Live Exchange Rate</span><strong id="rateStatus">1 USD = -- MXN</strong></div>
-    <table class="rates-table">
-      <thead><tr><th>DURATION</th><th>USD (USD)</th><th>MXN (MXN)</th></tr></thead>
-      <tbody>
-        <tr><td>🕘 1 Hour</td><td>$3.00 USD</td><td id="mxn1">$-- MXN</td></tr>
-        <tr><td>🕘 3 Hours</td><td>$7.00 USD</td><td id="mxn3">$-- MXN</td></tr>
-        <tr><td>🕘 24 Hours</td><td>$20.00 USD</td><td id="mxn24">$-- MXN</td></tr>
-      </tbody>
-    </table>
-    <p class="note">Rates are updated in real-time using live exchange rates.<br>Prices in MXN are approximate and may vary slightly.</p>
-    <div class="benefits">
-      <div><b>🛡️ 24/7 Security</b><span>Your vehicle is safe with us</span></div>
-      <div><b>🚗 Covered Parking</b><span>Protection from sun & rain</span></div>
-      <div><b>📷 CCTV Monitoring</b><span>Complete surveillance</span></div>
+  <section id="rates" class="rates-card">
+    <div class="section-title"><span>Transparent Pricing</span><h2>Choose your parking duration</h2><p>Simple rates with live Mexican peso conversion.</p></div>
+    <div class="exchange-pill"><span class="live-dot"></span><span id="rateStatus">Live USD → MXN rate loading...</span></div>
+    <div class="pricing-grid">
+      <button class="price-card" type="button" data-duration="1 Hour"><span>Quick Stop</span><h3>1 Hour</h3><strong>$3 USD</strong><em id="mxn1">$-- MXN</em></button>
+      <button class="price-card featured" type="button" data-duration="3 Hours"><span>Most Flexible</span><h3>3 Hours</h3><strong>$7 USD</strong><em id="mxn3">$-- MXN</em></button>
+      <button class="price-card" type="button" data-duration="24 Hours"><span>Full Day</span><h3>24 Hours</h3><strong>$20 USD</strong><em id="mxn24">$-- MXN</em></button>
     </div>
   </section>
 
-  <section id="book" class="booking">
-    <h2>📅 BOOK YOUR PARKING</h2>
+  <section id="book" class="booking-card">
+    <div class="section-title"><span>Secure Reservation</span><h2>Book and pay online</h2><p>Enter your details and complete payment securely with Stripe.</p></div>
     <form id="bookingForm">
       <div class="form-grid">
         <label>Check-in Date<input id="checkin" type="date" required></label>
-        <label>Duration<select id="duration">
-          <option value="1 Hour">1 Hour - $3</option>
-          <option value="3 Hours">3 Hours - $7</option>
-          <option value="24 Hours" selected>24 Hours - $20</option>
-        </select></label>
-        <label>Your Name<input id="customerName" required placeholder="Enter your full name"></label>
-        <label>Email Address<input id="customerEmail" type="email" required placeholder="Enter your email"></label>
-        <label>Phone Number<input id="customerPhone" required placeholder="+1 786 000 0000"></label>
-        <label>Tag Number (License Plate)<input id="tagNumber" required placeholder="Example: UUP-123-A"></label>
+        <label>Duration<select id="duration"><option value="1 Hour">1 Hour - $3</option><option value="3 Hours">3 Hours - $7</option><option value="24 Hours" selected>24 Hours - $20</option></select></label>
+        <label>Full Name<input id="customerName" required placeholder="Customer full name"></label>
+        <label>Email<input id="customerEmail" type="email" required placeholder="customer@email.com"></label>
+        <label>Phone<input id="customerPhone" required placeholder="+1 786 000 0000"></label>
+        <label>Tag / License Plate<input id="tagNumber" required placeholder="Example: UUP-123-A"></label>
       </div>
-      <div class="summary">
-        <div><span>Duration</span><strong id="summaryDuration">24 Hours</strong></div>
-        <div><span>Total (USD)</span><strong id="summaryUsd">$20.00 USD</strong></div>
-        <div><span>Total (MXN)</span><strong id="summaryMxn">$-- MXN</strong></div>
-      </div>
-      <button type="button" id="startPayment">PAY SECURELY $20.00 USD</button>
+      <div class="summary"><div><span>Selected duration</span><strong id="summaryDuration">24 Hours</strong></div><div><span>Total</span><strong id="summaryUsd">$20.00 USD</strong></div><div><span>Approx. MXN</span><strong id="summaryMxn">$-- MXN</strong></div></div>
+      <button type="button" id="startPayment">Pay Securely $20.00 USD</button>
     </form>
-    <form id="paymentForm" class="hidden"><div id="payment-element"></div><button id="payButton" type="submit">PAY NOW</button><p id="paymentMessage"></p></form>
-    <p class="stripe-note">Secure payment powered by <b>stripe</b></p>
+    <form id="paymentForm" class="hidden"><div id="payment-element"></div><button id="payButton" type="submit">Confirm Payment</button><p id="paymentMessage"></p></form>
+    <div class="trust-row"><span>Visa</span><span>Mastercard</span><span>Amex</span><span>Apple Pay</span><span>Google Pay</span><span>Stripe Secure</span></div>
   </section>
 </main>
 
-<section class="payments"><h3>WE ACCEPT SECURE PAYMENTS</h3><div class="payment-icons"><span>VISA</span><span>Mastercard</span><span>AMEX</span><span> Pay</span><span>G Pay</span><span>Powered by stripe 🔒</span></div></section>
-<footer><strong>BLUE WATERS CANCUN PARKING</strong><p>786-588-3514 • Open 24 Hours • Booking alerts to Bluewaterscancun@gmail.com</p></footer>
+<section id="trust" class="trust-section">
+  <div class="section-title center"><span>Premium Service</span><h2>Designed for safe, smooth parking operations</h2></div>
+  <div class="trust-grid">
+    <div><b>🛡️ Security Focused</b><p>Professional parking flow with online reservations and secure payments.</p></div>
+    <div><b>📲 Instant Booking</b><p>Customers can reserve from their phone and receive confirmation after payment.</p></div>
+    <div><b>💳 Modern Checkout</b><p>Stripe-ready payment system for cards and supported digital wallets.</p></div>
+    <div><b>🌎 USD + MXN</b><p>Pricing displays U.S. dollars and live Mexican peso conversion.</p></div>
+  </div>
+</section>
+
+<footer><div><strong>BLUE WATERS CANCUN PARKING</strong><span>Premium 24-hour parking service</span></div><p>Phone: 786-588-3514 • Booking alerts: Bluewaterscancun@gmail.com</p></footer>
 <script src="app.js"></script>
 </body>
 </html>
