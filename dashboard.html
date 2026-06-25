@@ -1,1 +1,32 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Blue Waters Dashboard</title><link rel="stylesheet" href="style.css"></head><body><header class="main-header"><div class="brand"><div class="brand-icon">≋</div><div><strong>BLUE WATERS</strong><span>DASHBOARD</span></div></div><nav><a href="index.html">WEBSITE</a></nav></header><main class="content" style="display:block"><section class="booking" style="border:0;padding:25px"><h2>Admin Dashboard</h2><p>Reservations and payments are stored in Stripe after live payments. Open Stripe Dashboard to see payments, customer emails, tag numbers, and booking metadata.</p><p>Business notification emails go to Bluewaterscancun@gmail.com when your Render environment variables are configured.</p></section></main></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Blue Waters Admin Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="main-header">
+  <div class="brand"><div class="brand-icon">≋</div><div><strong>BLUE WATERS</strong><span>ADMIN DASHBOARD</span></div></div>
+  <nav><a href="index.html">WEBSITE</a></nav>
+</header>
+
+<section class="admin-panel">
+  <h1>Password Protected Admin Dashboard</h1>
+  <div class="admin-box">
+    <h2>Reservations & Payments</h2>
+    <p>Reservation and payment details are stored in Stripe after successful payments.</p>
+    <p>Open your Stripe Dashboard to see customer name, phone, email, tag number, selected duration, and payment ID.</p>
+  </div>
+  <div class="admin-box">
+    <h2>Business Notifications</h2>
+    <p>Email alerts go to Bluewaterscancun@gmail.com when SMTP settings are configured in Render.</p>
+  </div>
+  <div class="admin-box">
+    <h2>Security</h2>
+    <p>This page is protected with a server-side username and password set in Render environment variables.</p>
+  </div>
+</section>
+</body>
+</html>
