@@ -1,21 +1,11 @@
-# Blue Waters Cancun Parking - iPhone Upload Version
+# Blue Waters Cancun Parking
 
-Upload these files directly to the top level of your GitHub repository.
+Pricing is set exactly as:
+- 1 Hour: $3 USD
+- 3 Hours: $7 USD
+- 24 Hours: $20 USD
 
-Files to upload:
-- package.json
-- server.js
-- index.html
-- style.css
-- app.js
-- dashboard.html
-- README.md
-- env.example
-
-Render settings:
-- Runtime: Node
-- Build Command: npm install
-- Start Command: npm start
-- Root Directory: leave blank
-
-Do not add real secrets to GitHub. Add Stripe, Gmail, and Twilio values in Render Environment Variables.
+Render:
+Build Command: npm install
+Start Command: npm start
+Root Directory: blank
