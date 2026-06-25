@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blue Waters Cancun Parking</title>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://api.frankfurter.dev">
+  <meta name="description" content="Blue Waters Cancun 24-hour parking with reservations, card payments, and USD/MXN pricing.">
+  <style>
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f8fb;color:#082b55}
+    header{background:#003b73;color:#fff;padding:18px 40px;display:flex;justify-content:space-between;align-items:center}
+    header a{color:#fff;text-decoration:none;margin-left:18px;font-weight:bold}
+    .hero{padding:60px 40px;background-size:cover;background-position:center;color:white;transition:background-image 1.2s ease-in-out;min-height:280px}
+    .hero h1{font-size:48px;margin:0 0 10px}
+    .btn,button{display:inline-block;background:#0074e8;color:white;padding:13px 20px;border-radius:8px;text-decoration:none;font-weight:bold;border:0;cursor:pointer}
+    .wrap{padding:35px;max-width:1100px;margin:auto}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+    .card{background:#fff;border-radius:12px;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+    .price{font-size:32px;font-weight:bold;color:#0074e8}
+    input,select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd6e2;border-radius:8px;margin:7px 0 14px;font-size:15px}
+    label{font-weight:bold}
+    .paycards span{display:inline-block;border:1px solid #ccd6e2;background:white;padding:11px 18px;border-radius:8px;margin:5px;font-weight:bold}
+    .notice{background:#eef6ff;border-left:4px solid #0074e8;padding:14px;border-radius:8px;margin-bottom:18px}
+    footer{background:#00284d;color:white;padding:28px 40px;margin-top:30px}.checkout-box{margin-top:18px;padding:18px;border:1px solid #d8e4ef;border-radius:12px;background:#fbfdff}.hidden{display:none!important}.payment-message{margin-top:12px;font-weight:bold}.success{color:#087a2f}.error{color:#b00020}.loading{opacity:.65;pointer-events:none}.mxn-price{font-size:15px;color:#506b86;margin-top:6px}.rate-note{margin-top:12px;color:#506b86}
+  </style>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<header>
+  <div><strong>BLUE WATERS CANCUN</strong><br><small>24 Hours Parking</small></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="tel:7865883514">786-588-3514</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Park Smart. Enjoy Cancun.</h1>
+  <p>Premium 24-hour parking in Cancun.</p>
+  <a class="btn" href="#reserve">Reserve Your Spot</a>
+</section>
+
+<main class="wrap">
+  <h2>Parking Rates</h2>
+  <div class="grid">
+    <div class="card"><h3>Hourly</h3><div class="price">$<span id="hourlyPrice">3</span> USD</div><div class="mxn-price"><span id="hourlyMxn">Loading...</span> MXN</div></div>
+    <div class="card"><h3>Daily</h3><div class="price">$<span id="dailyPrice">15</span> USD</div><div class="mxn-price"><span id="dailyMxn">Loading...</span> MXN</div></div>
+    <div class="card"><h3>Weekly</h3><div class="price">$<span id="weeklyPrice">70</span> USD</div><div class="mxn-price"><span id="weeklyMxn">Loading...</span> MXN</div></div>
+    <div class="card"><h3>Monthly</h3><div class="price">$<span id="monthlyPrice">200</span> USD</div><div class="mxn-price"><span id="monthlyMxn">Loading...</span> MXN</div></div>
+  </div>
+  <p class="rate-note">MXN prices update automatically using the live USD→MXN exchange rate. If the live rate is unavailable, the site uses a backup rate.</p>
+
+  <section id="reserve" class="card" style="margin-top:25px">
+    <h2>Reserve & Pay</h2>
+    <div class="notice">
+      New booking notifications will be sent to <strong>Bluewaterscancun@gmail.com</strong>.
+      The first time this form is submitted, FormSubmit may send a verification email to activate notifications.
+    </div>
+
+    <form id="reservationForm" action="https://formsubmit.co/Bluewaterscancun@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="New Blue Waters Cancun Parking Reservation">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="thank-you.html">
+
+      <div class="grid">
+        <div><label>Name</label><input id="customerName" name="Customer Name" required placeholder="Customer name"></div>
+        <div><label>Phone</label><input id="customerPhone" name="Customer Phone" required placeholder="Phone number"></div>
+        <div><label>Email</label><input id="customerEmail" name="Customer Email" type="email" placeholder="Customer email"></div>
+        <div><label>Vehicle</label><input id="vehicle" name="Vehicle" placeholder="Toyota / Honda"></div>
+        <div><label>Tag Number (License Plate)</label><input id="tagNumber" name="Tag Number" placeholder="Example: UUP-123-A" required></div>
+        <div><label>Parking Plan</label>
+          <select id="plan" name="Parking Plan">
+            <option value="Hourly">Hourly</option>
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+          </select>
+        </div>
+        <div><label>Check-in Date</label><input id="checkin" name="Check-in Date" type="date" required></div>
+        <div><label>Payment Status</label>
+          <select id="paymentStatus" name="Payment Status">
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+        <div><label>Amount</label><input id="amount" name="Amount" type="number" step="0.01" required></div>
+      </div>
+      <p><strong>Automatic receipts and SMS/WhatsApp confirmations are sent after successful payment.</strong></p>
+      <div class="paycards"><span>Visa</span><span>Mastercard</span><span>Amex</span><span>Apple Pay</span><span>Google Pay</span></div>
+      <button type="submit">Save Reservation & Email Notification</button>
+
+      <div class="checkout-box">
+        <h3>Pay Directly on This Website</h3>
+        <p>Enter the reservation information and amount above, then complete payment securely below.</p>
+        <button type="button" id="startPaymentButton">Start Secure Card Payment</button>
+        <form id="payment-form" class="hidden">
+          <div id="payment-element"></div>
+          <button id="submitPaymentButton" type="submit">Pay Now</button>
+          <div id="payment-message" class="payment-message"></div>
+        </form>
+      </div>
+    </form>
+    <p id="savedMessage"></p>
+  </section>
+</main>
+
+<footer>
+  <strong>Blue Waters Cancun Parking</strong><br>
+  Phone: 786-588-3514<br>
+  Open 24 Hours Parking
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
