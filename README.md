@@ -1,6 +1,12 @@
-Blue Waters Customer Accounts Update
+Blue Waters Cancun Parking - Contrast Fix
 
-1. Upload all files to GitHub and commit.
-2. In Supabase SQL Editor, run supabase_customer_accounts.sql.
-3. In Supabase Authentication URL settings, set Site URL to https://bluewatersparking.com and add redirect URL https://bluewatersparking.com/account.html.
-4. In Render, deploy latest commit.
+This package fixes the low-contrast pricing cards.
+
+Changes:
+- Removed Vehicle Model field.
+- Removed Check-in Date field.
+- High contrast pricing cards.
+- Stripe flow kept.
+- Supabase customer login kept.
+
+Upload all files to GitHub, commit, then deploy latest commit on Render.

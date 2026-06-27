@@ -1,14 +1,65 @@
 require("dotenv").config();
-const express=require("express"),path=require("path"),cors=require("cors"),Stripe=require("stripe"),nodemailer=require("nodemailer"),twilio=require("twilio");
-const app=express(); const stripe=Stripe(process.env.STRIPE_SECRET_KEY||"sk_test_missing");
-function requireAdmin(req,res,next){const user=process.env.ADMIN_USERNAME||"admin",pass=process.env.ADMIN_PASSWORD||"change-this-password",header=req.headers.authorization||"",token=header.split(" ")[1]||"",decoded=Buffer.from(token,"base64").toString(),[username,password]=decoded.split(":");if(username===user&&password===pass)return next();res.set("WWW-Authenticate",'Basic realm="Blue Waters Admin Dashboard"');return res.status(401).send("Admin password required.")}
-app.post("/stripe/webhook",express.raw({type:"application/json"}),async(req,res)=>{let event;try{event=process.env.STRIPE_WEBHOOK_SECRET?stripe.webhooks.constructEvent(req.body,req.headers["stripe-signature"],process.env.STRIPE_WEBHOOK_SECRET):JSON.parse(req.body.toString())}catch(e){return res.status(400).send(`Webhook Error: ${e.message}`)}if(event.type==="payment_intent.succeeded"){try{await sendConfirmations(event.data.object)}catch(e){console.error(e)}}res.json({received:true})});
-app.use(cors());app.use(express.json());
-app.get("/",(req,res)=>res.sendFile(path.join(__dirname,"index.html")));app.get("/account.html",(req,res)=>res.sendFile(path.join(__dirname,"account.html")));app.get("/account",(req,res)=>res.sendFile(path.join(__dirname,"account.html")));app.get("/dashboard.html",requireAdmin,(req,res)=>res.sendFile(path.join(__dirname,"dashboard.html")));app.get("/dashboard",requireAdmin,(req,res)=>res.sendFile(path.join(__dirname,"dashboard.html")));app.use(express.static(__dirname));app.get("/config",(req,res)=>res.json({publishableKey:process.env.STRIPE_PUBLISHABLE_KEY||""}));
-app.post("/create-payment-intent",async(req,res)=>{try{const{amount,customerName,customerPhone,customerEmail,tagNumber,duration,checkin,userId}=req.body;const allowed={"1 Hour":3,"3 Hours":7,"24 Hours":20};const amountNumber=allowed[duration]||Number(amount);if(!amountNumber||amountNumber<=0)return res.status(400).json({error:"Invalid amount."});const intent=await stripe.paymentIntents.create({amount:Math.round(amountNumber*100),currency:"usd",automatic_payment_methods:{enabled:true,allow_redirects:"never"},receipt_email:customerEmail||undefined,metadata:{business:"Blue Waters Cancun Parking",customerName:customerName||"",customerPhone:customerPhone||"",customerEmail:customerEmail||"",tagNumber:tagNumber||"",duration:duration||"",checkin:checkin||"",userId:userId||""}});res.json({clientSecret:intent.client_secret,paymentIntentId:intent.id})}catch(e){console.error(e);res.status(500).json({error:"Payment could not be created. Check Stripe keys."})}});
-function amountText(pi){return `$${(pi.amount_received/100).toFixed(2)} ${pi.currency.toUpperCase()}`}
-function confirmationText(pi){const m=pi.metadata||{};return `Blue Waters Cancun Parking Confirmation\n\nName: ${m.customerName||"Customer"}\nDuration: ${m.duration||"Parking"}\nCheck-in Date: ${m.checkin||"N/A"}\nTag Number: ${m.tagNumber||"N/A"}\nAmount Paid: ${amountText(pi)}\nPayment ID: ${pi.id}\n\nThank you for choosing Blue Waters Cancun Parking.\nPhone: 786-588-3514`}
-async function sendConfirmations(pi){const m=pi.metadata||{},text=confirmationText(pi);await Promise.allSettled([m.customerEmail?sendEmail(m.customerEmail,"Blue Waters Cancun Parking Receipt",text):Promise.resolve(),process.env.BUSINESS_NOTIFICATION_EMAIL?sendEmail(process.env.BUSINESS_NOTIFICATION_EMAIL,"Paid Booking - Blue Waters Cancun",text):Promise.resolve(),m.customerPhone?sendSms(normalizePhone(m.customerPhone),text):Promise.resolve(),m.customerPhone?sendWhatsApp(normalizePhone(m.customerPhone),text):Promise.resolve()])}
-function mailer(){if(!process.env.SMTP_HOST||!process.env.SMTP_USER||!process.env.SMTP_PASS)return null;return nodemailer.createTransport({host:process.env.SMTP_HOST,port:Number(process.env.SMTP_PORT||587),secure:process.env.SMTP_SECURE==="true",auth:{user:process.env.SMTP_USER,pass:process.env.SMTP_PASS}})}async function sendEmail(to,subject,text){const t=mailer();if(!t)return;await t.sendMail({from:process.env.EMAIL_FROM||process.env.SMTP_USER,to,subject,text})}
-function twilioClient(){if(!process.env.TWILIO_ACCOUNT_SID||!process.env.TWILIO_AUTH_TOKEN)return null;return twilio(process.env.TWILIO_ACCOUNT_SID,process.env.TWILIO_AUTH_TOKEN)}function normalizePhone(phone){let clean=String(phone||"").replace(/[^\d+]/g,"");if(!clean.startsWith("+")){if(clean.length===10)clean="+1"+clean;else if(clean.length>10)clean="+"+clean}return clean}async function sendSms(to,body){const c=twilioClient();if(!c||!process.env.TWILIO_SMS_FROM||!to)return;await c.messages.create({body,from:process.env.TWILIO_SMS_FROM,to})}async function sendWhatsApp(to,body){const c=twilioClient();if(!c||!process.env.TWILIO_WHATSAPP_FROM||!to)return;await c.messages.create({body,from:`whatsapp:${process.env.TWILIO_WHATSAPP_FROM}`,to:`whatsapp:${to}`})}
-app.listen(process.env.PORT||4242,()=>console.log("Blue Waters Cancun customer accounts running"));
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+const Stripe = require("stripe");
+
+const app = express();
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY || "");
+
+function requireAdmin(req, res, next) {
+  const user = process.env.ADMIN_USERNAME || "admin";
+  const pass = process.env.ADMIN_PASSWORD || "change-this-password";
+  const header = req.headers.authorization || "";
+  const token = header.split(" ")[1] || "";
+  const decoded = Buffer.from(token, "base64").toString();
+  const [username, password] = decoded.split(":");
+  if (username === user && password === pass) return next();
+  res.set("WWW-Authenticate", 'Basic realm="Blue Waters Admin"');
+  return res.status(401).send("Admin password required.");
+}
+
+app.post("/stripe/webhook", express.raw({ type: "application/json" }), (req, res) => {
+  let event;
+  try {
+    event = process.env.STRIPE_WEBHOOK_SECRET
+      ? stripe.webhooks.constructEvent(req.body, req.headers["stripe-signature"], process.env.STRIPE_WEBHOOK_SECRET)
+      : JSON.parse(req.body.toString());
+  } catch (e) {
+    return res.status(400).send(`Webhook Error: ${e.message}`);
+  }
+  res.json({ received: true });
+});
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(__dirname));
+
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
+app.get("/account", (req, res) => res.sendFile(path.join(__dirname, "account.html")));
+app.get("/dashboard", requireAdmin, (req, res) => res.sendFile(path.join(__dirname, "dashboard.html")));
+app.get("/dashboard.html", requireAdmin, (req, res) => res.sendFile(path.join(__dirname, "dashboard.html")));
+app.get("/config", (req, res) => res.json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || "" }));
+
+app.post("/create-payment-intent", async (req, res) => {
+  try {
+    const { customerName, customerPhone, customerEmail, tagNumber, duration, userId } = req.body;
+    const allowed = { "1 Hour": 3, "3 Hours": 7, "24 Hours": 20 };
+    const amountNumber = allowed[duration] || 20;
+
+    const intent = await stripe.paymentIntents.create({
+      amount: Math.round(amountNumber * 100),
+      currency: "usd",
+      automatic_payment_methods: { enabled: true, allow_redirects: "never" },
+      receipt_email: customerEmail || undefined,
+      metadata: { business:"Blue Waters Cancun Parking", customerName:customerName||"", customerPhone:customerPhone||"", customerEmail:customerEmail||"", tagNumber:tagNumber||"", duration:duration||"", userId:userId||"" }
+    });
+
+    res.json({ clientSecret: intent.client_secret, paymentIntentId: intent.id });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Payment could not be created. Check Stripe keys." });
+  }
+});
+
+app.listen(process.env.PORT || 4242, () => console.log("Blue Waters Cancun Parking live"));

@@ -1,6 +1,6 @@
 {
   "name": "blue-waters-cancun-parking",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -9,8 +9,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "nodemailer": "^6.9.16",
-    "stripe": "^17.5.0",
-    "twilio": "^5.4.0"
+    "stripe": "^17.5.0"
   }
 }
